@@ -14,6 +14,8 @@ OBJ=\
 	$(OUTDIR)/support.o\
 	$(OUTDIR)/interrupt.o\
 		$(OUTIDR)src/main.o \
+	$(OUTDIR)/pac.o\
+	$(OUTDIR)/Enemy.o\
 
 CFLAGS64=-DCONFIG_MANGO_64
 COMPILE64=$(CC) -c -Wall -g -o "$(OUTDIR)/$(*F).o" $(CFG_INC) $(CFLAGS64) $<

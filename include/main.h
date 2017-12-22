@@ -1,3 +1,6 @@
+#ifndef __MAIN_H
+#define __MAIN_H
+
 #define MAX_LIFE 3
 
 typedef enum type_
@@ -18,11 +21,4 @@ typedef struct block_
   type block_type;
 }block;
 
-typedef enum
-{
-	LEFT,
-	RIGHT,
-	UP,
-	DOWN,
-	UNDEF
-}way;
+#endif

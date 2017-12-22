@@ -3,6 +3,8 @@
 #include "../include/s3c6410.h"
 #include "../include/interrupt.h"
 #include "../include/main.h"
+#include "../include/pac.h"
+#include "../include/Enemy.h"
 
 #define MAX_LIFE 3
 
@@ -10,11 +12,39 @@
 int start = 0;	// If 1 then, start mode
 int life = MAX_LIFE;
 unsigned int count = 0;
-way direction = UNDEF;
+int c_count = 40;// Needed to edit
 
 block map[20][28];
 pos pacman;
 pos enemy[4];
+
+pos transform_to_pixel(pos block_pos){
+	pos temp;
+	temp.x = block_pos.x * 20 + 40;
+	temp.y = block_pos.y * 20 + 40;
+}
+
+void draw_pac(pos prev){
+	int i;
+	pos pixel_pos_prev = transform_to_pixel(prev);
+
+	for(i = 0; i < 20; i++){
+		delete_block(pixel_pos_prev.x++, pixel_pos_prev.y++);
+		print_pacman(pixel_pos_prev.x, pixel_pos_prev.y);
+	}
+}
+
+void draw_enemy(pos prev[]){
+	int i, j;
+
+	for(i = 0; i < 4; i++){
+		pos pixel_pos_prev = transform_to_pixel(prev[i]);
+		for(j = 0; j < 20; j++){
+			delete_block(pixel_pos_prev.x++, pixel_pos_prev.y++);
+			print_enemy(i, pixel_pos_prev.x, pixel_pos_prev.y);
+		}
+	}
+}
 
 void draw_map()
 {
@@ -73,14 +103,45 @@ void main_init(void)
 
 void mango_menu_main(void){
 
+	pos prev_enemy[4];
+	pos prev_pacman;
+
+	int check_valid, i;
 	//Print first face
+	
 	draw_map();
+	
 	//print map
 	while(1)
-	{
-	// Input code here	
-	
+	{	if(count % 100 == 0) {
+		//Enemy turn
+		for(i = 0; i < 4; i++){
+			prev_enemy[i] = enemy[i];
+		}
+		enemy_move();
+		enemy_stat_modify();
+
+		//Player turn
+		prev_pacman = pacman;
+		check_valid = mov_check();
+
+		//Draw Each case
+		if(check_valid == -1){ // dead case : collision with enemy
+			draw_pac(prev_pacman); 
+			draw_enemy(prev_enemy); 
+			break;
+		}
+		else if(check_valid == 1){ // collision with wall
+			draw_enemy(prev_enemy); 
+		}
+		else{
+			draw_pac(prev_pacman); 
+			draw_enemy(prev_enemy);
+		}
+		}
+
 		count = ++count % 100;
+
 	}
 }
 /* This is the main function */
