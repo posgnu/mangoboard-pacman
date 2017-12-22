@@ -961,7 +961,7 @@ void print_life(int index){
     S3C_VIDWxxADD2_PAGEWIDTH_F(PAGE_WIDTH);
       for(k = 0; k < index; k++){
         for(i = 0; i<20;i++){
-          for(j =0; j<40;j++)
+          for(j =0; j<20;j++)
             phy_addr[800*(i+140) + (j+ 600 + k*20)] = life[i][j];
         }
       }
