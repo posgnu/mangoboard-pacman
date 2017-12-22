@@ -59,4 +59,6 @@ void print_pacman(int, int);
 void print_item(int, int);
 void print_controller();
 void print_number(int, int, int);
+void print_stage(int);
+void print_score(int);
 #endif
