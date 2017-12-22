@@ -519,7 +519,7 @@ void print_controller(){
     S3C_VIDWxxADD2_PAGEWIDTH_F(PAGE_WIDTH);
       for(i = 0; i<60;i++){
         for(j =0; j<60;j++){
-            phy_addr[800*(i+ 300) + (j+ 600)] = 0xffffff;
+            phy_addr[800*(i+ 300) + (j+ 660)] = 0xffffff;
         }
       }
       for(i = 0; i<60;i++){
@@ -529,7 +529,7 @@ void print_controller(){
       }
       for(i = 0; i<60;i++){
         for(j =0; j<60;j++){
-            phy_addr[800*(i+ 420) + (j+ 600)] = 0xffffff;
+            phy_addr[800*(i+ 420) + (j+ 660)] = 0xffffff;
         }
       }
       for(i = 0; i<60;i++){
