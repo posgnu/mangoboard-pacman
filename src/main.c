@@ -8,7 +8,7 @@
 #include <stdlib.h>
 
 #define MAX_LIFE 5
-
+#define MAX_COIN 180
 extern way direct;
 extern mov_stat;
 
@@ -17,7 +17,7 @@ int round = 1;
 int start = 0;	// If 1 then, start mode
 int biology = MAX_LIFE;
 unsigned int count = 0;
-int c_count = 100;// Needed to edit
+int c_count = MAX_COIN;// Needed to edit
 
 block map[20][28];
 pos pacman;
@@ -39,11 +39,13 @@ void draw_pac(pos prev, pos cur){
 
 	pos pixel_pos_prev = transform_to_pixel(prev);
 	
-	for(i = 0; i < 20; i++){
+	for(i = 0; i < 1000; i++){
+		if(i % 50 == 0){
 		delete_block(pixel_pos_prev.x, pixel_pos_prev.y);
 		pixel_pos_prev.x += incrx;
 		pixel_pos_prev.y += incry;
 		print_pacman(pixel_pos_prev.x, pixel_pos_prev.y);
+	}
 	}
 }
 
@@ -132,23 +134,45 @@ void mango_menu_main(void){
 	pos prev_enemy[4];
 	pos prev_pacman;
 
+	int level;
+	if(round == 1)
+		level = 50;
+	else if(round == 2)
+		level = 25;
+	else if(round ==3)
+		level = 10;
+	else
+		level = 2; 
 	int check_valid, i;
 	//Print first face
-	
+
+	startnew:
+	//print map
+	while(1){
+	//Prepare new stage
+	main_init();
 	draw_map();
 	print_stage(round);
-	//print map
 	while(1)
 	{
-		srand(count);
 		print_life(biology);	
-		print_score(100 - c_count);
-
-		if(count % 50 == 0)
+		print_score(MAX_COIN - c_count);
+		
+		/* Check win */
+		if(c_count == 0){
+			round++;
+			if(round == 5){ // clear the game
+				biology = 1;
+				break;
+			}
+			goto startnew;
+		}
+				
+		if(count % level == 0)
 			if(direct != UNDEF)
 				mov_stat = direct;
 
-		if(count % 100 == 0) 
+		if(count % (level*2) == 0) 
 		{
 			//Enemy turn
 			for(i = 0; i < 4; i++){
@@ -183,9 +207,16 @@ void mango_menu_main(void){
 		count = ++count % 1000;
 
 	}
+	biology--;
+	if(biology == 0){
+		printf("Game over\n");
+		break;
+	}
+	}
 }
 /* This is the main function */
 int main(void){
+	int c;
 
   /* Initillazing lcd */
   mango_uart_init(1, 115200);
@@ -196,10 +227,29 @@ int main(void){
   mango_hw_init();
 
 	/* Initiallize */
-	main_init();
 	draw_image_red();
 	enable_interrupts();
-  mango_menu_main();
+	
+	while(1)
+	{
+	  printf ("\nMain menu\n");
+		printf( "1> Start Game\n");
+		printf("2> Exit\n");
+		c = getchar();
+		printf("\n%c is selected\n", c);
+
+		switch(c){
+		case '1':
+  		mango_menu_main();
+			printf("Game start\n");
+			break;
+		case '2':
+			goto finished;
+		default:
+			printf("Invalid button\n");
+		}
+	}
+	finished:
   return 0;
 }
 
