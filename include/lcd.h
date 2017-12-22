@@ -61,4 +61,5 @@ void print_controller();
 void print_number(int, int, int);
 void print_stage(int);
 void print_score(int);
+void print_life(int);
 #endif
