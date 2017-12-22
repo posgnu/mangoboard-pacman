@@ -242,8 +242,8 @@ static void printblock(int m,int n)
 	int i,j;
   unsigned int *phy_addr = FB_ADDR;
 
-	for(i = m; i < 20; i++)
-		for(j = n; j <20; j++)
+	for(i = m; i < m + 20; i++)
+		for(j = n; j < n + 20; j++)
 			phy_addr[i * 800 + j] = 0x00ffff;
 }
 
@@ -265,15 +265,12 @@ void draw_image_red(void){
 	for (i = 0; i < 480; i++)
 		if(i % 20 == 0)
 			for (j = 0; j < 840; j++)
-				phy_addr[i * 800 + j] = 0xff0000;
+				phy_addr[i * 800 + j] = 0x0099ff;
 
   for (i = 0; i < 480; i++)
       for (j = 0; j < 840; j++)
 				if(j % 20 == 0)
-        	phy_addr[i * 800 + j] = 0xff0000;
-
-	printblock(0,0);
-  printblock(460,820);
+        	phy_addr[i * 800 + j] = 0x0099ff;
 
   set_wincon0_enable();
   set_vidcon0_enable();
@@ -319,6 +316,10 @@ void print_block(unsigned int data, int row, int column){
         phy_addr[800*(i+row) + (j+column)] = data;
 
     }
+
+  set_wincon0_enable();
+  set_vidcon0_enable();
+
 }
 
 void print_coin(unsigned int data, int row, int column){
@@ -396,6 +397,10 @@ void print_coin(unsigned int data, int row, int column){
     phy_addr[800*(8+row) + (12+column)] = data;
     phy_addr[800*(8+row) + (13+column)] = data;
     phy_addr[800*(8+row) + (14+column)] = data;
+
+  set_wincon0_enable();
+  set_vidcon0_enable();
+
 }
 
 void delete_block(int row, int column){
@@ -415,6 +420,10 @@ void delete_block(int row, int column){
       for(j = 0; j < 20; j++)
         phy_addr[800*(i+row) + (j+column)] = 0x0;
     }
+
+  set_wincon0_enable();
+  set_vidcon0_enable();
+
 }
 void print_enemy(int index, int row, int column){
   unsigned int *phy_addr = FB_ADDR;
@@ -446,6 +455,10 @@ void print_enemy(int index, int row, int column){
           }
       }
     }
+
+  set_wincon0_enable();
+  set_vidcon0_enable();
+
 }
 
 void print_pacman(int row, int column){
@@ -464,6 +477,10 @@ void print_pacman(int row, int column){
         for(j =0; j<20;j++)
           phy_addr[800*(i+row) + (j+column)] = pacman[i][j];
       }
+
+  set_wincon0_enable();
+  set_vidcon0_enable();
+
 }
 
 void print_item(int row, int column){
@@ -482,6 +499,10 @@ void print_item(int row, int column){
         for(j =0; j<20;j++)
           phy_addr[800*(i+row) + (j+column)] = item[i][j];
       }
+
+  set_wincon0_enable();
+  set_vidcon0_enable();
+
 }
 
 void print_controller(){
@@ -521,6 +542,9 @@ void print_controller(){
             phy_addr[800*(i+ 360) + (j+ 720)] = 0xffffff;
         }
       }
+  set_wincon0_enable();
+  set_vidcon0_enable();
+
 }
 /*
 int main(void){
