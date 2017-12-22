@@ -4,23 +4,23 @@ void lcd_pwr_on(void){
   LCD_PWR_CON  = (LCD_PWR_CON & ~(3<<18)) | (1<<18);
   LCD_PWR_DAT  |= (1<<9);
 }
-    
+
 void lcd_Pwr_off(void){
   LCD_PWR_DAT  &= ~(1<<9);
 }
-     
+
 void lcd_bl_on(int level){
-  LCD_BL_CON = (LCD_BL_CON & ~(3<<30)) | (2<<30); 
+  LCD_BL_CON = (LCD_BL_CON & ~(3<<30)) | (2<<30);
 
   TCFG0_REG = (TCFG0_REG & ~(0xFF)) | 0xFF;
   TCFG1_REG = (TCFG1_REG & ~(0xF<<4)) | (4<<4);
-           
+
   TCNTB1_REG = MAX_BL_LEV;
   if(level >= MAX_BL_LEV)
     TCMPB1_REG = MAX_BL_LEV-1;
   else
     TCMPB1_REG = level;
-  
+
   TCON_REG |= (1<<9);
   TCON_REG = (TCON_REG & ~(0xF<<8)) | (1<<11) | (1<<8) ;
 }
@@ -60,22 +60,22 @@ void init_lcd_reg(void){
     S3C_VIDCON0_CLKVAL_F((int)(hclk/S3CFB_PIXEL_CLOCK)) |
     S3C_VIDCON0_CLKDIR_DIVIDED |
     S3C_VIDCON0_CLKSEL_F_HCLK;
-  
+
   S3C_VIDCON1 = S3C_VIDCON1_IHSYNC_INVERT |
     S3C_VIDCON1_IVSYNC_INVERT |
     S3C_VIDCON1_IVDEN_NORMAL;
-  
+
   S3C_VIDTCON0 = S3C_VIDTCON0_VBPD(S3CFB_VBP - 1) |
     S3C_VIDTCON0_VFPD(S3CFB_VFP - 1) |
     S3C_VIDTCON0_VSPW(S3CFB_VSW - 1);
-  
+
   S3C_VIDTCON1 = S3C_VIDTCON1_HBPD(S3CFB_HBP - 1) |
     S3C_VIDTCON1_HFPD(S3CFB_HFP - 1) |
     S3C_VIDTCON1_HSPW(S3CFB_HSW - 1);
-  
+
   S3C_VIDTCON2 = S3C_VIDTCON2_LINEVAL(S3CFB_VRES - 1) |
     S3C_VIDTCON2_HOZVAL(S3CFB_HRES - 1);
-  
+
   S3C_WINCON0 = S3C_WINCONx_BUFSEL_0 |
     S3C_WINCONx_BUFAUTOEN_DISABLE |
     S3C_WINCONx_HAWSWP_DISABLE |
@@ -117,9 +117,9 @@ void draw_image_red(void){
   int hbase, vbase;
   int imgh=120;
   int imgv=120;
-  
+
   S3C_VIDW00ADD0B0 = FB_ADDR; // Buffer Address
-  S3C_VIDW00ADD1B0 = S3C_VIDWxxADD1_VBASEL_F(FB_ADDR + 
+  S3C_VIDW00ADD1B0 = S3C_VIDWxxADD1_VBASEL_F(FB_ADDR +
     (PAGE_WIDTH + S3CFB_OFFSET) * S3CFB_VRES);
   S3C_VIDW00ADD2  = S3C_VIDWxxADD2_OFFSIZE_F(S3CFB_OFFSET) |
     S3C_VIDWxxADD2_PAGEWIDTH_F(PAGE_WIDTH);
@@ -137,9 +137,9 @@ void draw_image_red(void){
 
 	printblock(0,0);
   printblock(460,820);
- 
+
   set_wincon0_enable();
-  set_vidcon0_enable(); 
+  set_vidcon0_enable();
 }
 
 void draw_image_green(void){
@@ -148,9 +148,9 @@ void draw_image_green(void){
   int hbase, vbase;
   int imgh=120;
   int imgv=120;
-  
+
   S3C_VIDW00ADD0B0 = FB_ADDR; // Buffer Address
-  S3C_VIDW00ADD1B0 = S3C_VIDWxxADD1_VBASEL_F(FB_ADDR + 
+  S3C_VIDW00ADD1B0 = S3C_VIDWxxADD1_VBASEL_F(FB_ADDR +
     (PAGE_WIDTH + S3CFB_OFFSET) * S3CFB_VRES);
   S3C_VIDW00ADD2  = S3C_VIDWxxADD2_OFFSIZE_F(S3CFB_OFFSET) |
     S3C_VIDWxxADD2_PAGEWIDTH_F(PAGE_WIDTH);
@@ -159,9 +159,106 @@ void draw_image_green(void){
 	for (i = 0; i < 480; i++)
 		for (j = 0; j <800; j++)
 			phy_addr[i * 800 + j] = 0x00ff00;
-  
+
   set_wincon0_enable();
-  set_vidcon0_enable(); 
+  set_vidcon0_enable();
+}
+
+void print_block(unsigned int data, int row, int column){
+  unsigned int *phy_addr = FB_ADDR;
+  int i, j;
+  int hbase, vbase;
+  int imgh=120;
+  int imgv=120;
+
+  S3C_VIDW00ADD0B0 = FB_ADDR; // Buffer Address
+  S3C_VIDW00ADD1B0 = S3C_VIDWxxADD1_VBASEL_F(FB_ADDR +
+    (PAGE_WIDTH + S3CFB_OFFSET) * S3CFB_VRES);
+  S3C_VIDW00ADD2  = S3C_VIDWxxADD2_OFFSIZE_F(S3CFB_OFFSET) |
+    S3C_VIDWxxADD2_PAGEWIDTH_F(PAGE_WIDTH);
+
+    for(i = 0; i < 20; i++){
+      for(j = 0; j < 20; j++)
+        phy_addr[800*(i+row) + (j+column)] = data;
+
+    }
+}
+
+void print_coin(unsigned int data, int row, int column){
+  unsigned int *phy_addr = FB_ADDR;
+  int i, j;
+  int hbase, vbase;
+  int imgh=120;
+  int imgv=120;
+
+  S3C_VIDW00ADD0B0 = FB_ADDR; // Buffer Address
+  S3C_VIDW00ADD1B0 = S3C_VIDWxxADD1_VBASEL_F(FB_ADDR +
+    (PAGE_WIDTH + S3CFB_OFFSET) * S3CFB_VRES);
+  S3C_VIDW00ADD2  = S3C_VIDWxxADD2_OFFSIZE_F(S3CFB_OFFSET) |
+    S3C_VIDWxxADD2_PAGEWIDTH_F(PAGE_WIDTH);
+
+    phy_addr[800*(3+row) + (8+column)] = data;
+    phy_addr[800*(3+row) + (9+column)] = data;
+    phy_addr[800*(3+row) + (10+column)] = data;
+    phy_addr[800*(3+row) + (11+column)] = data;
+
+    phy_addr[800*(4+row) + (8+column)] = data;
+    phy_addr[800*(4+row) + (9+column)] = data;
+    phy_addr[800*(4+row) + (10+column)] = data;
+    phy_addr[800*(4+row) + (11+column)] = data;
+
+    phy_addr[800*(5+row) + (8+column)] = data;
+    phy_addr[800*(5+row) + (9+column)] = data;
+    phy_addr[800*(5+row) + (10+column)] = data;
+    phy_addr[800*(5+row) + (11+column)] = data;
+
+    phy_addr[800*(9+row) + (8+column)] = data;
+    phy_addr[800*(9+row) + (9+column)] = data;
+    phy_addr[800*(9+row) + (10+column)] = data;
+    phy_addr[800*(9+row) + (11+column)] = data;
+
+    phy_addr[800*(10+row) + (8+column)] = data;
+    phy_addr[800*(10+row) + (9+column)] = data;
+    phy_addr[800*(10+row) + (10+column)] = data;
+    phy_addr[800*(10+row) + (11+column)] = data;
+
+    phy_addr[800*(11+row) + (8+column)] = data;
+    phy_addr[800*(11+row) + (9+column)] = data;
+    phy_addr[800*(11+row) + (10+column)] = data;
+    phy_addr[800*(11+row) + (11+column)] = data;
+
+    phy_addr[800*(6+row) + (5+column)] = data;
+    phy_addr[800*(6+row) + (6+column)] = data;
+    phy_addr[800*(6+row) + (7+column)] = data;
+    phy_addr[800*(6+row) + (8+column)] = data;
+    phy_addr[800*(6+row) + (9+column)] = data;
+    phy_addr[800*(6+row) + (10+column)] = data;
+    phy_addr[800*(6+row) + (11+column)] = data;
+    phy_addr[800*(6+row) + (12+column)] = data;
+    phy_addr[800*(6+row) + (13+column)] = data;
+    phy_addr[800*(6+row) + (14+column)] = data;
+
+    phy_addr[800*(7+row) + (5+column)] = data;
+    phy_addr[800*(7+row) + (6+column)] = data;
+    phy_addr[800*(7+row) + (7+column)] = data;
+    phy_addr[800*(7+row) + (8+column)] = data;
+    phy_addr[800*(7+row) + (9+column)] = data;
+    phy_addr[800*(7+row) + (10+column)] = data;
+    phy_addr[800*(7+row) + (11+column)] = data;
+    phy_addr[800*(7+row) + (12+column)] = data;
+    phy_addr[800*(7+row) + (13+column)] = data;
+    phy_addr[800*(7+row) + (14+column)] = data;
+
+    phy_addr[800*(8+row) + (5+column)] = data;
+    phy_addr[800*(8+row) + (6+column)] = data;
+    phy_addr[800*(8+row) + (7+column)] = data;
+    phy_addr[800*(8+row) + (8+column)] = data;
+    phy_addr[800*(8+row) + (9+column)] = data;
+    phy_addr[800*(8+row) + (10+column)] = data;
+    phy_addr[800*(8+row) + (11+column)] = data;
+    phy_addr[800*(8+row) + (12+column)] = data;
+    phy_addr[800*(8+row) + (13+column)] = data;
+    phy_addr[800*(8+row) + (14+column)] = data;
 }
 
 /*
@@ -174,7 +271,7 @@ int main(void){
   init_lcd_reg();
 
   set_lcd_pos(0, 0, S3CFB_HRES, S3CFB_VRES);
-  
+
   draw_image_red();
   draw_image_green();
 	ph[800 * 14 +14] = 0xff0000;
