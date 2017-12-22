@@ -394,7 +394,7 @@ void delete_block(int row, int column){
         phy_addr[800*(i+row) + (j+column)] = 0x0;
     }
 }
-void print_enemy(int row, int column){
+void print_enemy(int index, int row, int column){
   unsigned int *phy_addr = FB_ADDR;
   int i, j;
   int hbase, vbase;
@@ -408,12 +408,21 @@ void print_enemy(int row, int column){
     S3C_VIDWxxADD2_PAGEWIDTH_F(PAGE_WIDTH);
       for(i = 0; i<20;i++){
         for(j =0; j<20;j++)
-          phy_addr[800*(i+row) + (j+column)] = enemy1[i][j];
-          phy_addr[800*(i+row) + (j+column)] = enemy2[i][j];
-          phy_addr[800*(i+row) + (j+column)] = enemy3[i][j];
-          phy_addr[800*(i+row) + (j+column)] = enemy4[i][j];
+        switch(index){
+          case 1:
+            phy_addr[800*(i+row) + (j+column)] = enemy1[i][j];
+            break;
+          case 2:
+            phy_addr[800*(i+row) + (j+column)] = enemy2[i][j];
+            break;
+          case 3:
+            phy_addr[800*(i+row) + (j+column)] = enemy3[i][j];
+            break;
+          case 4:
+            phy_addr[800*(i+row) + (j+column)] = enemy4[i][j];
+            break;
       }
-
+    }
 }
 
 void print_pacman(int row, int column){
