@@ -962,7 +962,7 @@ void print_life(int index){
       for(k = 0; k < index; k++){
         for(i = 0; i<20;i++){
           for(j =0; j<40;j++)
-            phy_addr[800*(i+100) + (j+ 600 + k*20)] = life[i][j];
+            phy_addr[800*(i+140) + (j+ 600 + k*20)] = life[i][j];
         }
       }
       for(k = index; k < 5; k++){
