@@ -18,7 +18,6 @@ void disable_interrupts(void){
 }
 
 unsigned int timer1_isr_call_count = 0;
-int ccc = 0;
 //Interrupt Service Routine for Timer1
 void timer1InterruptServiceRoutine(void){
   unsigned int temp;
@@ -26,14 +25,6 @@ void timer1InterruptServiceRoutine(void){
   //Disable any other interrupt
   temp = VIC0INTENABLE_REG;
   VIC0INTENCLEAR_REG = 0xffffffff;
-	if(ccc){
-		draw_image_green();
-		ccc = !ccc;
-	}
-	else{
-		draw_image_red();
-		ccc = !ccc;
-	}
   timer1_isr_call_count++;
   printf ("timer1InterruptSeviceRoutine is called %d times\n", timer1_isr_call_count);
 
@@ -48,8 +39,8 @@ void timer1InterruptServiceRoutine(void){
 void mango_timer_init(void){
   int i;
 
-  TCFG0_REG = (TCFG0_REG & ~(0xff)) | 0x20 //Prescaler 0: 0x21:32
-  TCFG1_REG = (TCFG1_REG & ~(0xf<<4)) | (1<<4) //divider MUX1: 1/2
+  TCFG0_REG = (TCFG0_REG & ~(0xff)) | 0x20; //Prescaler 0: 0x21:32
+  TCFG1_REG = (TCFG1_REG & ~(0xf<<4)) | (1<<4); //divider MUX1: 1/2
 
   //One interrupt per one second
   TCNTB1_REG = 1000000;
@@ -60,8 +51,8 @@ void mango_timer_init(void){
   //Timer1 Auto-reload on & Timer1 on
 
   //Enable interrupt for timer1
-  VIC0INTENABLE_REG |= BIT_TIMER1;
-  TINT_CSTAT_REG |= BIT_TIMER1_EN;
+  //VIC0INTENABLE_REG |= BIT_TIMER1;
+  //TINT_CSTAT_REG |= BIT_TIMER1_EN;
 
   //Set address of interrupt handler for timer1
   VIC0VECTADDR24 = (unsigned)timer1InterruptServiceRoutine;
@@ -70,7 +61,7 @@ void mango_timer_init(void){
 void mango_hw_init(void){
   disable_interrupts();
 	mango_interrupt_init();
-  mango_timer_init();
+//  mango_timer_init();
   mango_uart_init(1, 115200);
 }
 
@@ -114,12 +105,6 @@ void touchInterruptServiceRoutine(void){
 void touchInterruptServiceRoutine2(void){
   unsigned int temp;
   unsigned int x, y, rx, ry;
-	
-	if(!start)
-	{
-		start = 1;
-		printf("Start game!\n");
-	}
 
   if( !(VIC1RAWINTR_REG & 1<<31) )
     return;

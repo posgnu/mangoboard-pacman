@@ -7,31 +7,32 @@
 #define MAX_LIFE 3
 
 /* Map of pacman */
-block map[20][28];
 
-pos pacman;
-pos enemy[4];
 
 int start = 0;	// If 1 then, start mode
 int life = MAX_LIFE;
 
-typedef enum type
+typedef enum type_
 {
 	WALL,
 	BACK,
 	COIN
-}
+}type;
 
-typedef struct pos
+typedef struct pos_
 {
 	int x;
 	int y;
-}
+}pos;
 
-typedef struct block
+typedef struct block_
 {
 	type block_type;
-}
+}block;
+
+block map[20][28];
+pos pacman;
+pos enemy[4];
 
 void main_init(void)
 {
@@ -41,7 +42,7 @@ void main_init(void)
 	for (i = 0; i < 20; i++)
 		for (j = 0; j < 28; j++)
 		{
-			map[20][28].block_type = BACK
+			map[i][j].block_type = BACK;
 		}
 	
 	//Positioning pacman and enemy
@@ -52,11 +53,11 @@ void main_init(void)
 void mango_menu_main(void){
 
 	//Print first face
-
+	
 	draw_image_red();
-	while(!start);
-	//Run until touchpad interrupt come in
-
+	print_block(0xffffff, 20, 20);
+	print_coin(0xffff00, 40, 40);
+	
 	//print map
 	while(1)
 	{
@@ -76,8 +77,8 @@ int main(void){
   mango_hw_init();
 
 	/* Initiallize */
-	main_init
-
+	main_init();
+	enable_interrupts();
   mango_menu_main();
   return 0;
 }

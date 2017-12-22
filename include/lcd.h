@@ -51,5 +51,6 @@ void set_vidcon0_enable(void);
 void set_lcd_pos(int, int, int, int);
 void draw_image_red(void);
 void draw_image_green(void);
-
+void print_block(unsigned int, int, int);
+void print_coin(unsigned int, int, int);
 #endif
