@@ -22,25 +22,39 @@ pos transform_to_pixel(pos block_pos){
 	pos temp;
 	temp.x = block_pos.x * 20 + 40;
 	temp.y = block_pos.y * 20 + 40;
+	
+	return temp;
 }
 
-void draw_pac(pos prev){
-	int i;
+void draw_pac(pos prev, pos cur){
+	int i, incrx, incry;
+
+	incrx = cur.x - prev.x;
+	incry = cur.y - prev.y;
+
 	pos pixel_pos_prev = transform_to_pixel(prev);
 
 	for(i = 0; i < 20; i++){
-		delete_block(pixel_pos_prev.x++, pixel_pos_prev.y++);
+		delete_block(pixel_pos_prev.x, pixel_pos_prev.y);
+		pixel_pos_prev.x += incrx;
+		pixel_pos_prev.y += incry;
 		print_pacman(pixel_pos_prev.x, pixel_pos_prev.y);
 	}
 }
 
-void draw_enemy(pos prev[]){
+void draw_enemy(pos prev[], pos cur[]){
 	int i, j;
+	int incrx, incry;	
 
 	for(i = 0; i < 4; i++){
+		incrx = cur[i].x - prev[i].x;
+		incry = cur[i].y - prev[i].y;
+
 		pos pixel_pos_prev = transform_to_pixel(prev[i]);
 		for(j = 0; j < 20; j++){
-			delete_block(pixel_pos_prev.x++, pixel_pos_prev.y++);
+			delete_block(pixel_pos_prev.x, pixel_pos_prev.y);
+			pixel_pos_prev.x += incrx;
+			pixel_pos_prev.y += incry;
 			print_enemy(i, pixel_pos_prev.x, pixel_pos_prev.y);
 		}
 	}
@@ -79,16 +93,16 @@ void main_init(void)
 		}
 	
 	//Positioning pacman and enemy
-	pacman.x = 14;
-	pacman.y = 18;
-	enemy[0].x = 14;
-	enemy[0].y = 6;
-  enemy[1].x = 14;
-  enemy[1].y = 7;
-  enemy[2].x = 15;
-  enemy[2].y = 6;
-  enemy[3].x = 15;
-  enemy[3].y = 7;
+	pacman.x = 18;
+	pacman.y = 14;
+	enemy[0].x = 6;
+	enemy[0].y = 14;
+  enemy[1].x = 7;
+  enemy[1].y = 14;
+  enemy[2].x = 6;
+  enemy[2].y = 15;
+  enemy[3].x = 7;
+  enemy[3].y = 15;
   map[6][14].block_type = BACK;
 	map[7][14].block_type = BACK;
 	map[6][15].block_type = BACK;
@@ -113,7 +127,7 @@ void mango_menu_main(void){
 	
 	//print map
 	while(1)
-	{	if(count % 100 == 0) {
+	{	if(count % 1000 == 0) {
 		//Enemy turn
 		for(i = 0; i < 4; i++){
 			prev_enemy[i] = enemy[i];
@@ -127,20 +141,21 @@ void mango_menu_main(void){
 
 		//Draw Each case
 		if(check_valid == -1){ // dead case : collision with enemy
-			draw_pac(prev_pacman); 
-			draw_enemy(prev_enemy); 
+			draw_pac(prev_pacman, pacman); 
+			draw_enemy(prev_enemy, enemy); 
 			break;
 		}
 		else if(check_valid == 1){ // collision with wall
-			draw_enemy(prev_enemy); 
+			draw_enemy(prev_enemy, enemy); 
 		}
 		else{
-			draw_pac(prev_pacman); 
-			draw_enemy(prev_enemy);
+			draw_pac(prev_pacman, pacman); 
+			draw_enemy(prev_enemy, enemy);
 		}
+		map[pacman.x][pacman.y].block_type = BACK; 
 		}
 
-		count = ++count % 100;
+		count = ++count % 1000;
 
 	}
 }

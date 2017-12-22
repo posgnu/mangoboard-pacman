@@ -777,7 +777,7 @@ void print_controller(){
 
 }
 
-void print_number(int index){
+void print_number(int index, int row, int column){
   unsigned int *phy_addr = FB_ADDR;
   int i, j;
   int hbase, vbase;

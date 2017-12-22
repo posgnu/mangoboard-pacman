@@ -10,7 +10,7 @@
 extern block map[][28];
 extern pos enemy[4];
 
-int enemy_stat[4] = {Up_STAT, Up_STAT, Up_STAT, Up_STAT};
+int enemy_stat[4] = {Left_STAT, Left_STAT, Left_STAT, Left_STAT};
 int if_blocked[4] = {0, 0, 0 ,0};
 int priot[4][4] = {{Up_STAT, Down_STAT, Left_STAT, Right_STAT},
                  {Down_STAT, Left_STAT, Up_STAT, Right_STAT},
