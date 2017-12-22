@@ -8,6 +8,8 @@
 
 #define MAX_LIFE 3
 
+extern way direct;
+
 /* Map of pacman */
 int start = 0;	// If 1 then, start mode
 int life = MAX_LIFE;
@@ -33,7 +35,7 @@ void draw_pac(pos prev, pos cur){
 	incry = cur.y - prev.y;
 
 	pos pixel_pos_prev = transform_to_pixel(prev);
-
+	
 	for(i = 0; i < 20; i++){
 		delete_block(pixel_pos_prev.x, pixel_pos_prev.y);
 		pixel_pos_prev.x += incrx;
@@ -59,6 +61,13 @@ void draw_enemy(pos prev[], pos cur[]){
 		}
 	}
 }
+
+void draw_coin(pos prev[]){
+	int i;
+	for(i = 0; i < 4; i++)
+		print_coin(0xffff00, prev[i].x, prev[i].y);
+}
+
 
 void draw_map()
 {
@@ -142,15 +151,18 @@ void mango_menu_main(void){
 		//Draw Each case
 		if(check_valid == -1){ // dead case : collision with enemy
 			draw_pac(prev_pacman, pacman); 
-			draw_enemy(prev_enemy, enemy); 
+			draw_enemy(prev_enemy, enemy);
+			draw_coin(prev_enemy);
 			break;
 		}
 		else if(check_valid == 1){ // collision with wall
 			draw_enemy(prev_enemy, enemy); 
+			draw_coin(prev_enemy);
 		}
 		else{
 			draw_pac(prev_pacman, pacman); 
 			draw_enemy(prev_enemy, enemy);
+			draw_coin(prev_enemy);
 		}
 		map[pacman.x][pacman.y].block_type = BACK; 
 		}

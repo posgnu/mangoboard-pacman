@@ -21,4 +21,12 @@ typedef struct block_
   type block_type;
 }block;
 
+typedef enum
+{
+	UNDEF,
+	UP,
+	DOWN,
+	LEFT,
+	RIGHT
+}way;
 #endif

@@ -1,7 +1,7 @@
 #include "interrupt.h"
+#include "main.h"
 
-
-extern int start;
+way direct = UNDEF;
 
 //enable interrupt in CPU level
 void enable_interrupts(void){
@@ -122,7 +122,21 @@ void touchInterruptServiceRoutine2(void){
   ry = (y - 340) * 480 / 360;
 
   printf("(%d, %d)\n", rx, ry);
- 
+ /*
+	if((rx <= 33*20) && (rx >= 30*20))//left
+	else if((rx<=39*20) && (rx>=36*20))//right
+	else if((ry>=15*20) && (ry<=18*20))//up
+	else if((ry>=21*20) && (ry<=24*20))//down
+*/
+
+
+
+
+
+
+
+
+
   writel(0xd3, ADCTSC);
   writel(0x1, ADCCLRINT);
     

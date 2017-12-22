@@ -4,6 +4,6 @@
 
 void enemy_move();
 void enemy_stat_modify();
-void get_possible_direction(pos, int priot_m[], int);
+void get_possible_direction(pos, int priot_m[][4], int);
 
 #endif
