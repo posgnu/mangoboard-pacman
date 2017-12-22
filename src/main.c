@@ -4,40 +4,65 @@
 #include "../include/interrupt.h"
 #include "../include/printpacman.h"
 
-//typedef struct block
+#define MAX_LIFE 3
+
+/* Map of pacman */
+block map[20][28];
+
+pos pacman;
+pos enemy[4];
+
+int start = 0;	// If 1 then, start mode
+int life = MAX_LIFE;
+
+typedef enum type
+{
+	WALL,
+	BACK,
+	COIN
+}
+
+typedef struct pos
+{
+	int x;
+	int y;
+}
+
+typedef struct block
+{
+	type block_type;
+}
+
+void main_init(void)
+{
+	int i, j;
+	
+	/* Initiallize all the map to indicate BACK */
+	for (i = 0; i < 20; i++)
+		for (j = 0; j < 28; j++)
+		{
+			map[20][28].block_type = BACK
+		}
+	
+	//Positioning pacman and enemy
+
+	//Positioning COIN and WALL
+}
+
 void mango_menu_main(void){
-  int c;
 
-  while(1){
-    printf ("\nMain menu\n");
-    printf ("1> Enable interrupt\n");
-    printf ("2> Disable interrupt\n");
-    printf ("3> Touch Test\n");
-    printf ("x> Exit\n");
-    c = getchar();
-    printf ("\n%c is selected\n", c);
+	//Print first face
 
-    switch(c){
-      case '1':
-        enable_interrupts();
-        printf ("interrupt enabled\n");
-        break;
-      case '2':
-        disable_interrupts();
-        printf ("interrupt disabled\n");
-        break;
-    case '3' :
-    touch_test();
-    break;
-      case 'x':
-        interrupt_reset();
-        goto finished;
-      default:
-        printf ("Invalid button\n");
-    }
-  }
-  finished:
-    return;
+	draw_image_red();
+	while(!start);
+	//Run until touchpad interrupt come in
+
+	//print map
+	while(1)
+	{
+	// Input code here	
+	
+	}
 }
 /* This is the main function */
 int main(void){
@@ -50,7 +75,8 @@ int main(void){
   set_lcd_pos(0, 0, S3CFB_HRES, S3CFB_VRES);
   mango_hw_init();
 
-	draw_image_red();
+	/* Initiallize */
+	main_init
 
   mango_menu_main();
   return 0;

@@ -1,5 +1,8 @@
 #include "interrupt.h"
 
+
+extern int start;
+
 //enable interrupt in CPU level
 void enable_interrupts(void){
   __asm__ __volatile__ ("mrs r0, cpsr");
@@ -45,11 +48,11 @@ void timer1InterruptServiceRoutine(void){
 void mango_timer_init(void){
   int i;
 
-  TCFG0_REG = (TCFG0_REG & ~(0xff)) | 0x1; //Prescaler 0: 0x21:32
-  TCFG1_REG = (TCFG1_REG & ~(0xf<<4)); //divider MUX1: 1/2
+  TCFG0_REG = (TCFG0_REG & ~(0xff)) | 0x20 //Prescaler 0: 0x21:32
+  TCFG1_REG = (TCFG1_REG & ~(0xf<<4)) | (1<<4) //divider MUX1: 1/2
 
   //One interrupt per one second
-  TCNTB1_REG = 1000;
+  TCNTB1_REG = 1000000;
   //TCMPB1_REG = 0xffff - 1;
 
   TCON_REG |= (1<<9); //Timer1 Manual update
@@ -111,6 +114,12 @@ void touchInterruptServiceRoutine(void){
 void touchInterruptServiceRoutine2(void){
   unsigned int temp;
   unsigned int x, y, rx, ry;
+	
+	if(!start)
+	{
+		start = 1;
+		printf("Start game!\n");
+	}
 
   if( !(VIC1RAWINTR_REG & 1<<31) )
     return;
@@ -127,7 +136,7 @@ void touchInterruptServiceRoutine2(void){
   rx = (x - 200) * 800 / 640;
   ry = (y - 340) * 480 / 360;
 
-  printf("(%d, %d)\n", x, y);
+  printf("(%d, %d)\n", rx, ry);
  
   writel(0xd3, ADCTSC);
   writel(0x1, ADCCLRINT);

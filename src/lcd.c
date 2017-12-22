@@ -100,6 +100,16 @@ void set_lcd_pos(int ltx, int lty, int rbx, int rby){
     S3C_VIDOSDxB_OSD_RBY_F(rby- 1);
 }
 
+static void printblock(int m,int n)
+{
+	int i,j;
+  unsigned int *phy_addr = FB_ADDR;
+
+	for(i = m; i < 20; i++)
+		for(j = n; j <20; j++)
+			phy_addr[i * 800 + j] = 0x00ffff;
+}
+
 int ac = 0;
 void draw_image_red(void){
   unsigned int *phy_addr = FB_ADDR;
@@ -125,9 +135,9 @@ void draw_image_red(void){
 				if(j % 20 == 0)
         	phy_addr[i * 800 + j] = 0xff0000;
 
-	phy_addr[0] = 0x00ff00;
-	phy_addr[479 * 800 + 839] = 0x00ff00;
-  
+	printblock(0,0);
+  printblock(460,820);
+ 
   set_wincon0_enable();
   set_vidcon0_enable(); 
 }
