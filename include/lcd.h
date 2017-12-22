@@ -56,4 +56,5 @@ void print_coin(unsigned int, int, int);
 void delete_block(int, int);
 void print_enemy(int, int);
 void print_pacman(int, int);
+void print_item(int, int);
 #endif
