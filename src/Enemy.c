@@ -26,13 +26,17 @@ void enemy_move(){
         enemy_backup = enemy[i];
         switch (enemy_stat[i]){
             case Up_STAT:
-                enemy[i].x++;
-            case Down_STAT:
                 enemy[i].x--;
+								break;
+            case Down_STAT:
+                enemy[i].x++;
+								break;
             case Left_STAT:
                 enemy[i].y--;
+								break;
             case Right_STAT:
                 enemy[i].y++;
+								break;
         }
         overlap_state = map[enemy[i].x][enemy[i].y];
         if (overlap_state.block_type == WALL){
@@ -64,11 +68,11 @@ void get_possible_direction(pos Current_pos, int priot_m[][4], int monster_num){
     for(i = 0; i < 4; i++){
         switch (priot_m[monster_num][i]){
             case Up_STAT:
-                if (map[Current_pos.x + 1][Current_pos.y].block_type != WALL)
+                if (map[Current_pos.x - 1][Current_pos.y].block_type != WALL)
                     enemy_stat[monster_num] = Up_STAT;
                 break;
             case Down_STAT:
-                if (map[Current_pos.x - 1][Current_pos.y].block_type != WALL)
+                if (map[Current_pos.x + 1][Current_pos.y].block_type != WALL)
                     enemy_stat[monster_num] = Down_STAT;
                 break;
             case Left_STAT:

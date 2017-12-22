@@ -24,10 +24,10 @@ int mov_check(){
         case Stop_STAT:
             return 0;
         case Up_STAT:
-            pacman.x += 1;
+            pacman.x -= 1;
             break;
         case Down_STAT:
-            pacman.x -= 1;
+            pacman.x += 1;
             break;
         case Left_STAT:
             pacman.y -= 1;

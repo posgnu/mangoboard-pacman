@@ -966,7 +966,7 @@ void print_life(int index){
         }
       }
       for(k = index; k < 5; k++){
-        print_block(0x0, 140, 600+k*20)
+        print_block(0x0, 140, 600+k*20);
       }
   set_wincon0_enable();
   set_vidcon0_enable();

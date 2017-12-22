@@ -5,16 +5,19 @@
 #include "../include/main.h"
 #include "../include/pac.h"
 #include "../include/Enemy.h"
+#include <stdlib.h>
 
-#define MAX_LIFE 3
+#define MAX_LIFE 5
 
 extern way direct;
+extern mov_stat;
 
+int round = 1;
 /* Map of pacman */
 int start = 0;	// If 1 then, start mode
-int life = MAX_LIFE;
+int biology = MAX_LIFE;
 unsigned int count = 0;
-int c_count = 40;// Needed to edit
+int c_count = 100;// Needed to edit
 
 block map[20][28];
 pos pacman;
@@ -133,38 +136,48 @@ void mango_menu_main(void){
 	//Print first face
 	
 	draw_map();
-	
+	print_stage(round);
 	//print map
 	while(1)
-	{	if(count % 1000 == 0) {
-		//Enemy turn
-		for(i = 0; i < 4; i++){
-			prev_enemy[i] = enemy[i];
-		}
-		enemy_move();
-		enemy_stat_modify();
+	{
+		srand(count);
+		print_life(biology);	
+		print_score(100 - c_count);
 
-		//Player turn
-		prev_pacman = pacman;
-		check_valid = mov_check();
+		if(count % 50 == 0)
+			if(direct != UNDEF)
+				mov_stat = direct;
 
-		//Draw Each case
-		if(check_valid == -1){ // dead case : collision with enemy
-			draw_pac(prev_pacman, pacman); 
-			draw_enemy(prev_enemy, enemy);
-			draw_coin(prev_enemy);
-			break;
-		}
-		else if(check_valid == 1){ // collision with wall
-			draw_enemy(prev_enemy, enemy); 
-			draw_coin(prev_enemy);
-		}
-		else{
-			draw_pac(prev_pacman, pacman); 
-			draw_enemy(prev_enemy, enemy);
-			draw_coin(prev_enemy);
-		}
-		map[pacman.x][pacman.y].block_type = BACK; 
+		if(count % 100 == 0) 
+		{
+			//Enemy turn
+			for(i = 0; i < 4; i++){
+				prev_enemy[i] = enemy[i];
+			}
+			enemy_move();
+			enemy_stat_modify();
+
+			//Player turn
+			prev_pacman = pacman;
+			check_valid = mov_check();
+
+			//Draw Each case
+			if(check_valid == -1){ // dead case : collision with enemy
+				draw_pac(prev_pacman, pacman); 
+				draw_enemy(prev_enemy, enemy);
+				draw_coin(prev_enemy);
+				break;
+			}
+			else if(check_valid == 1){ // collision with wall
+				draw_enemy(prev_enemy, enemy); 
+				draw_coin(prev_enemy);
+			}
+			else{
+				draw_pac(prev_pacman, pacman); 
+				draw_enemy(prev_enemy, enemy);
+				draw_coin(prev_enemy);
+			}
+			map[pacman.x][pacman.y].block_type = BACK; 
 		}
 
 		count = ++count % 1000;

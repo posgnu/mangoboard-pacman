@@ -122,20 +122,23 @@ void touchInterruptServiceRoutine2(void){
   ry = (y - 340) * 480 / 360;
 
   printf("(%d, %d)\n", rx, ry);
- /*
-	if((rx <= 33*20) && (rx >= 30*20))//left
-	else if((rx<=39*20) && (rx>=36*20))//right
-	else if((ry>=15*20) && (ry<=18*20))//up
-	else if((ry>=21*20) && (ry<=24*20))//down
-*/
-
-
-
-
-
-
-
-
+ 
+	if((rx <= 33*20) && (rx >= 30*20)) {//left
+		direct = LEFT;
+		printf("LEFT\n");
+	}
+	else if((rx<=39*20) && (rx>=36*20)) {//right
+		direct = RIGHT;
+		printf("RIGHT\n");
+	}
+	else if((ry>=15*20) && (ry<=18*20)) {//up
+		direct = UP;
+		printf("UP\n");
+	}
+	else if((ry>=21*20) && (ry<=24*20)) {//down
+		direct = DOWN;
+		printf("DOWN\n");
+	}
 
   writel(0xd3, ADCTSC);
   writel(0x1, ADCCLRINT);
