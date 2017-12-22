@@ -483,6 +483,45 @@ void print_item(int row, int column){
           phy_addr[800*(i+row) + (j+column)] = item[i][j];
       }
 }
+
+void print_controller(){
+  unsigned int *phy_addr = FB_ADDR;
+  int i, j;
+  int hbase, vbase;
+  int imgh=120;
+  int imgv=120;
+
+  S3C_VIDW00ADD0B0 = FB_ADDR; // Buffer Address
+  S3C_VIDW00ADD1B0 = S3C_VIDWxxADD1_VBASEL_F(FB_ADDR +
+    (PAGE_WIDTH + S3CFB_OFFSET) * S3CFB_VRES);
+  S3C_VIDW00ADD2  = S3C_VIDWxxADD2_OFFSIZE_F(S3CFB_OFFSET) |
+    S3C_VIDWxxADD2_PAGEWIDTH_F(PAGE_WIDTH);
+      for(i = 0; i<60;i++){
+        for(j =0; j<60;j++){
+            phy_addr[800*(i+ 300) + (j+ 600)] = 0xffffff;
+        }
+      }
+      for(i = 0; i<60;i++){
+        for(j =0; j<60;j++){
+            phy_addr[800*(i+ 360) + (j+ 600)] = 0xffffff;
+        }
+      }
+      for(i = 0; i<60;i++){
+        for(j =0; j<60;j++){
+            phy_addr[800*(i+ 420) + (j+ 600)] = 0xffffff;
+        }
+      }
+      for(i = 0; i<60;i++){
+        for(j =0; j<60;j++){
+            phy_addr[800*(i+ 360) + (j+ 660)] = 0xffffff;
+        }
+      }
+      for(i = 0; i<60;i++){
+        for(j =0; j<60;j++){
+            phy_addr[800*(i+ 360) + (j+ 720)] = 0xffffff;
+        }
+      }
+}
 /*
 int main(void){
 	unsigned int *ph = FB_ADDR;

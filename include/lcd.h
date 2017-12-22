@@ -57,4 +57,5 @@ void delete_block(int, int);
 void print_enemy(int, int);
 void print_pacman(int, int);
 void print_item(int, int);
+void print_controller();
 #endif
