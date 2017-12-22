@@ -58,4 +58,5 @@ void print_enemy(int, int, int);
 void print_pacman(int, int);
 void print_item(int, int);
 void print_controller();
+void print_number(int);
 #endif
