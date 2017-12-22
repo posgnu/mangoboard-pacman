@@ -5,21 +5,19 @@
 #include "../include/main.h"
 #include "../include/pac.h"
 #include "../include/Enemy.h"
-#include "../include/mango_button.h"
 #include <stdlib.h>
-#include <string.h>
 
 #define MAX_LIFE 5
-#define MAX_COIN 180
+
 extern way direct;
 extern mov_stat;
 
-int round = 4;
+int round = 1;
 /* Map of pacman */
 int start = 0;	// If 1 then, start mode
 int biology = MAX_LIFE;
 unsigned int count = 0;
-int c_count = MAX_COIN;// Needed to edit
+int c_count = 100;// Needed to edit
 
 block map[20][28];
 pos pacman;
@@ -33,56 +31,6 @@ pos transform_to_pixel(pos block_pos){
 	return temp;
 }
 
-
-static int level_travel()
-{
-	int len;
-  char buf;
- 
-  len = mango_uart_read(&buf, 1, 1);
-  if (len > 0)
-    return 0;
-     
-	MANGO_BTN_STATE up = mango_btn_scan(MANGO_BTN_KEYCODE_UP);
-	MANGO_BTN_STATE down = mango_btn_scan(MANGO_BTN_KEYCODE_DOWN);
-	MANGO_BTN_STATE left = mango_btn_scan(MANGO_BTN_KEYCODE_LEFT);
-	MANGO_BTN_STATE right = mango_btn_scan(MANGO_BTN_KEYCODE_RIGHT);
-
-
-  if (up == MANGO_BTN_STATE_DOWN){
-						round++;
-            printf("Up key pressed\n");
-						return 1;
-				}
-       
-        if (down == MANGO_BTN_STATE_DOWN){
-						round--;
-            printf("DOWN key pressed\n");
-						return 2;
-				}
-
-        if (left == MANGO_BTN_STATE_DOWN)
-            printf("LEFT key pressed\n");
-
-        if (right == MANGO_BTN_STATE_DOWN)
-            printf("RIGHT key pressed\n");
-
-
-        if (up == MANGO_BTN_STATE_UP)
-            printf("Up key released\n");
-       
-        if (down == MANGO_BTN_STATE_UP)
-            printf("DOWN key released\n");
-
-        if (left == MANGO_BTN_STATE_UP)
-            printf("LEFT key released\n");
-
-        if (right == MANGO_BTN_STATE_UP)
-            printf("RIGHT key released\n");
-		return 0;
-}
-
-
 void draw_pac(pos prev, pos cur){
 	int i, incrx, incry;
 
@@ -91,13 +39,11 @@ void draw_pac(pos prev, pos cur){
 
 	pos pixel_pos_prev = transform_to_pixel(prev);
 	
-	for(i = 0; i < 1000; i++){
-		if(i % 50 == 0){
+	for(i = 0; i < 20; i++){
 		delete_block(pixel_pos_prev.x, pixel_pos_prev.y);
 		pixel_pos_prev.x += incrx;
 		pixel_pos_prev.y += incry;
 		print_pacman(pixel_pos_prev.x, pixel_pos_prev.y);
-	}
 	}
 }
 
@@ -119,12 +65,16 @@ void draw_enemy(pos prev[], pos cur[]){
 	}
 }
 
-void draw_coin(pos prev){
+void draw_coin(pos prev[]){
 	pos pixel_pos_prev;
 
-	pixel_pos_prev = transform_to_pixel(prev);
-	print_coin(0xffff00, pixel_pos_prev.x, pixel_pos_prev.y);
+	int i;
+	for(i = 0; i < 4; i++){
+		pixel_pos_prev = transform_to_pixel(prev[i]);
+		print_coin(0xffff00, pixel_pos_prev.x, pixel_pos_prev.y);
+	}
 }
+
 
 void draw_map()
 {
@@ -187,47 +137,22 @@ void mango_menu_main(void){
 	pos prev_pacman;
 
 	int check_valid, i;
-	int level;
-	if(round == 1)
-		level = 50;
-	else if(round == 2)
-		level = 25;
-	else if(round ==3)
-		level = 10;
-	else
-		level = 2; 
 	//Print first face
 
-	startnew:
-	//print map
-	while(1){
-	c_count = MAX_COIN;
-	//Prepare new stage
-	main_init();
 	draw_map();
 	print_stage(round);
+	//print map
 	while(1)
 	{
-		if(level_travel())
-			break;
+		srand(count);
 		print_life(biology);	
-		print_score(MAX_COIN - c_count);
-		
-		/* Check win */
-		if(c_count == 0){
-			round++;
-			if(round == 5){ // clear the game
-				biology = 1;
-				break;
-			}
-			goto startnew;
-		}
-				
-		if(count % level == 0)
+		print_score(100 - c_count);
+
+		if(count % 50 == 0)
 			if(direct != UNDEF)
 				mov_stat = direct;
 
-		if(count % (level*2) == 0) 
+		if(count % 100 == 0) 
 		{
 			//Enemy turn
 			for(i = 0; i < 4; i++){
@@ -236,13 +161,6 @@ void mango_menu_main(void){
 			enemy_move();
 			enemy_stat_modify();
 
-			if((pacman.x == 9)&&(pacman.y==27)){
-				pacman.y = 1;
-			}
-			if((pacman.x == 9)&&(pacman.y==0)){
-				pacman.y = 26;
-			}
-			
 			//Player turn
 			prev_pacman = pacman;
 			check_valid = mov_check();
@@ -251,26 +169,20 @@ void mango_menu_main(void){
 			if(check_valid == -1){ // dead case : collision with enemy
 				draw_pac(prev_pacman, pacman); 
 				draw_enemy(prev_enemy, enemy);
-				for(i = 0; i < 4; i++){
-					if(map[prev_enemy[i].x][prev_enemy[i].y].block_type == COIN)
-						draw_coin(prev_enemy[i]);
-				}
+				if(map[prev_enemy[i].x][prev_enemy[i].y].block_type == COIN)
+					draw_coin(prev_enemy);
 				break;
 			}
 			else if(check_valid == 1){ // collision with wall
 				draw_enemy(prev_enemy, enemy); 
-				for(i = 0; i < 4; i++){
-					if(map[prev_enemy[i].x][prev_enemy[i].y].block_type == COIN)
-						draw_coin(prev_enemy[i]);
-				}
+				if(map[prev_enemy[i].x][prev_enemy[i].y].block_type == COIN)
+					draw_coin(prev_enemy);
 			}
 			else{
 				draw_pac(prev_pacman, pacman); 
 				draw_enemy(prev_enemy, enemy);
-				for(i = 0; i < 4; i++){
-					if(map[prev_enemy[i].x][prev_enemy[i].y].block_type == COIN)
-						draw_coin(prev_enemy[i]);
-				}
+				if(map[prev_enemy[i].x][prev_enemy[i].y].block_type == COIN)
+					draw_coin(prev_enemy);
 			}
 			map[pacman.x][pacman.y].block_type = BACK; 
 		}
@@ -278,20 +190,12 @@ void mango_menu_main(void){
 		count = ++count % 1000;
 
 	}
-	biology--;
-	if(biology == 0){
-		printf("Game over\n");
-		break;
-	}
-	}
 }
 /* This is the main function */
 int main(void){
-	int c;
 
   /* Initillazing lcd */
   mango_uart_init(1, 115200);
-	mango_btn_init();
   lcd_bl_on(MAX_BL_LEV-1);
   lcd_pwr_on();
   init_lcd_reg();
@@ -299,29 +203,10 @@ int main(void){
   mango_hw_init();
 
 	/* Initiallize */
+	main_init();
 	draw_image_red();
 	enable_interrupts();
-	
-	while(1)
-	{
-	  printf ("\nMain menu\n");
-		printf( "1> Start Game\n");
-		printf("2> Exit\n");
-		c = getchar();
-		printf("\n%c is selected\n", c);
-
-		switch(c){
-		case '1':
-  		mango_menu_main();
-			printf("Game start\n");
-			break;
-		case '2':
-			goto finished;
-		default:
-			printf("Invalid button\n");
-		}
-	}
-	finished:
+  mango_menu_main();
   return 0;
 }
 
