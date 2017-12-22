@@ -1,43 +1,4 @@
-#include <stdio.h>
-
-#include "s3c_uart.h"
-#include "s3c6410.h"
-#include "img.h"
-
-#define FIN 12000000
-#define LCD_PWR_CON GPNCON_REG
-#define LCD_PWR_DAT GPNDAT_REG
-#define LCD_BL_CON  GPFCON_REG
-#define LCD_BL_DAT  GPFDAT_REG
-#define MAX_BL_LEV  0xFF
-
-#define S3CFB_HFP       64   /* front porch */
-#define S3CFB_HSW       128   /* hsync width */
-#define S3CFB_HBP       16  /* back porch */
-
-#define S3CFB_VFP       16   /* front porch */
-#define S3CFB_VSW       1   /* vsync width */
-#define S3CFB_VBP       16   /* back porch */
-
-#define S3CFB_HRES      800 /* horizon pixel  x resolition */
-#define S3CFB_VRES      480 /* line cnt       y resolution */
-#define S3CFB_SIZE      (S3CFB_HRES*S3CFB_VRES)
-
-#define S3CFB_HRES_VIRTUAL  800 /* horizon pixel  x resolition */
-#define S3CFB_VRES_VIRTUAL  960 /* line cnt       y resolution */
-
-#define S3CFB_HRES_OSD      800 /* horizon pixel  x resolition */
-#define S3CFB_VRES_OSD      480 /* line cnt       y resolution */
-
-#define S3CFB_VFRAME_FREQ       60  /* frame rate freq */
-
-#define S3CFB_PIXEL_CLOCK   (S3CFB_VFRAME_FREQ * (S3CFB_HFP + S3CFB_HSW + S3CFB_HBP + S3CFB_HRES) * (S3CFB_VFP + S3CFB_VSW + S3CFB_VBP + S3CFB_VRES))
-
-#define BYTE_PER_PIXEL 4
-#define S3CFB_OFFSET ((S3CFB_HRES_VIRTUAL - S3CFB_HRES) * BYTE_PER_PIXEL)
-#define PAGE_WIDTH  (S3CFB_HRES * BYTE_PER_PIXEL)
-
-#define FB_ADDR     0x5a000000
+#include "lcd.h"
 
 void lcd_pwr_on(void){
   LCD_PWR_CON  = (LCD_PWR_CON & ~(3<<18)) | (1<<18);
@@ -139,6 +100,7 @@ void set_lcd_pos(int ltx, int lty, int rbx, int rby){
     S3C_VIDOSDxB_OSD_RBY_F(rby- 1);
 }
 
+int ac = 0;
 void draw_image_red(void){
   unsigned int *phy_addr = FB_ADDR;
   int i, j, k;
@@ -154,8 +116,17 @@ void draw_image_red(void){
 
   //Write your code here!
 	for (i = 0; i < 480; i++)
-		for (j = 0; j <800; j++)
-			phy_addr[i * 800 + j] = 0xff0000;
+		if(i % 20 == 0)
+			for (j = 0; j < 840; j++)
+				phy_addr[i * 800 + j] = 0xff0000;
+
+  for (i = 0; i < 480; i++)
+      for (j = 0; j < 840; j++)
+				if(j % 20 == 0)
+        	phy_addr[i * 800 + j] = 0xff0000;
+
+	phy_addr[0] = 0x00ff00;
+	phy_addr[479 * 800 + 839] = 0x00ff00;
   
   set_wincon0_enable();
   set_vidcon0_enable(); 
@@ -183,7 +154,7 @@ void draw_image_green(void){
   set_vidcon0_enable(); 
 }
 
-
+/*
 int main(void){
 	unsigned int *ph = FB_ADDR;
   mango_uart_init(1, 115200);
@@ -214,4 +185,4 @@ int main(void){
 	ph[800 * 14 +29] = 0xff0000;
 	ph[800 * 14 +30] = 0xff0000;
   return 0;
-}
+}*/

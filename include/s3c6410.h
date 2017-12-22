@@ -1071,7 +1071,13 @@ typedef enum {
 #define oINTMSK				(0x14)		// VIC INT EN CLEAR (Mask by writing 1)
 #define oINTSUBMSK			(0x1C)		// VIC SOFT INT CLEAR
 #define oVECTADDR			(0xF00)		// VIC ADDRESS
-
+#define ADCCON				(0x7E00B000)
+#define ADCTSC				(0x7E00B004)
+#define ADCDLY				(0x7E00B008)
+#define ADCDAT0				(0x7E00B00C)
+#define ADCDAT1				(0x7E00B010)
+#define ADCCLRINT			(0x7E00B018)
+#define ADCCLRINTPNDNUP			(0x7E00B020)
 
 
 /*
