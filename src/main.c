@@ -233,7 +233,8 @@ void mango_menu_main(void){
 			for(i = 0; i < 4; i++){
 				prev_enemy[i] = enemy[i];
 			}
-			enemy_move();
+			if(enemy_move() == -1)
+				break;
 			enemy_stat_modify();
 
 			if((pacman.x == 9)&&(pacman.y==27)){

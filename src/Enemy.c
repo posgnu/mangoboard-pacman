@@ -7,17 +7,18 @@
 #define Left_STAT 3
 #define Right_STAT 4
 
+extern pos pacman;
 extern block map[][28];
 extern pos enemy[4];
 
 int enemy_stat[4] = {Up_STAT, Up_STAT, Up_STAT, Up_STAT};
 int if_blocked[4] = {0, 0, 0 ,0};
-int priot[4][4] = {{Up_STAT, Left_STAT, Right_STAT, Down_STAT},
+int priot[4][4] = {{Up_STAT, Left_STAT, Down_STAT, Right_STAT},
                  {Down_STAT, Right_STAT, Up_STAT, Left_STAT},
-                 {Up_STAT, Left_STAT, Right_STAT, Down_STAT},
-                 {Down_STAT, Right_STAT, Left_STAT, Up_STAT}};
+                 {Up_STAT, Left_STAT, Down_STAT, Right_STAT},
+                 {Down_STAT, Right_STAT, Up_STAT, Left_STAT}};
 
-void enemy_move(){
+int enemy_move(){
     int i;
     pos enemy_backup;
     block overlap_state;
@@ -39,12 +40,15 @@ void enemy_move(){
 								break;
         }
         overlap_state = map[enemy[i].x][enemy[i].y];
+        if (enemy[i].x == pacman.x && enemy[i].y == pacman.y)
+            return -1;
         if (overlap_state.block_type == WALL){
             enemy[i] = enemy_backup;   
             if_blocked[i] = 1;
         }
                 
     }
+    return 0;
 }
 
 void enemy_stat_modify(){
@@ -58,6 +62,11 @@ void enemy_stat_modify(){
         else{
             rv = rand() % 100;
             if(rv < 50){
+                if (rv < 30){
+                    temp = priot[i][0];
+                    priot[i][0] = priot[i][3];
+                    priot[i][3] = temp;
+                }
                 temp = priot[i][0]; 
                 priot[i][0] = priot[i][2];
                 priot[i][2] = temp;
