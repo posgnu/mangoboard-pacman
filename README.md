@@ -14,7 +14,19 @@ Upload the compiled binary on mangoboard. After bootelf, you can see the main me
 
 ## How to play the game
 
-You can move your pacman by arrow which is at right side of screen. And also you can see the score, remained life and round information at the top. You can also change the level of the round by pushing buttons at the bottom of the screen.
+You can move your pacman by arrow which is at right side of screen. And also you can see the score, remained life and round information at the top. You can also change the level of the round by pushing buttons under the screen.
+
+## Demo
+
+![20171223_101435](/Users/posgnu/Desktop/repos/mangoboard-pacman/20171223_101435.jpg)
+
+![20171223_101443](/Users/posgnu/Desktop/repos/mangoboard-pacman/20171223_101443.jpg)
+
+![20171223_101446](/Users/posgnu/Desktop/repos/mangoboard-pacman/20171223_101446.jpg)
+
+![20171223_101448](/Users/posgnu/Desktop/repos/mangoboard-pacman/20171223_101448.jpg)
+
+![20171223_101453](/Users/posgnu/Desktop/repos/mangoboard-pacman/20171223_101453.jpg)
 
 ## Report
 
@@ -722,4 +734,3 @@ unsigned int number1[20][20] = {
 처음 LCD를 출력해보기 위해서 LAB PPT에 적혀있는 것을 그대로 따라했었다. 하지만 연결했을 때 망고보드에서 main에 접근하지 못하고 그대로 멈추는 현상이 발생하였다. 이를 해결하기 위해 LCD header도 만져보고 Graphic2D도 참고해보고 하였지만 해결되지 않았다. 그러나 같은 파일을 다른 컴퓨터에서 mangoboard를 실행했을 때 정상적으로 실행되는 모습을 볼 수 있었다. 정상적으로 진행되지 않을 때 메인기기의 고장을 살펴보고 문제가 없다면 주변기기의 문제를 찾아보는 것도 좋을 것 같다.
 
 처음 LCD에 출력할 start page와 map을 800px * 480px으로 제작했었다. 하지만 파일의 크기가 너무 큰 나머지 mangoboard에 올리는 것도 오래 걸리고 큰 파일이 올라갔을 때 정상적으로 작동하지 않는 모습을 볼 수 있었다. 두 가지 방법이 제시되었는데 하나는 원본 파일을 축소시켜 print할 때 크게 그리는 방법과 다른 하나는 block 단위로 나누어 최대한 이미지 파일은 20px * 20px을 유지하도록 하는 것 이었다. 우리 조는 2번째 방안을 선택하였고 이는 크기를 줄이는 것에 효과적으로 작동하였다.
-
