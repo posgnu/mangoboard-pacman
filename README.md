@@ -18,15 +18,15 @@ You can move your pacman by arrow which is at right side of screen. And also you
 
 ## Demo
 
-![20171223_101435](/Users/posgnu/Desktop/repos/mangoboard-pacman/20171223_101435.jpg)
+![20171223_101435](20171223_101435.jpg)
 
-![20171223_101443](/Users/posgnu/Desktop/repos/mangoboard-pacman/20171223_101443.jpg)
+![20171223_101443](20171223_101443.jpg)
 
-![20171223_101446](/Users/posgnu/Desktop/repos/mangoboard-pacman/20171223_101446.jpg)
+![20171223_101446](20171223_101446.jpg)
 
-![20171223_101448](/Users/posgnu/Desktop/repos/mangoboard-pacman/20171223_101448.jpg)
+![20171223_101448](20171223_101448.jpg)
 
-![20171223_101453](/Users/posgnu/Desktop/repos/mangoboard-pacman/20171223_101453.jpg)
+![20171223_101453](20171223_101453.jpg)
 
 ## Report
 
