@@ -1,4 +1,4 @@
-# Mangoboard final report
+# Pacman game for [mangoboard](https://www.icbanq.com/icdownload/data/ICBShop/Board/Mango%20CM-V310%20Premium%20Package%203%20Exynos%204210%20S5PV310%20EVB%20.pdf)
 > CSED211
 > 김근우, 김선표, 김승환
 
