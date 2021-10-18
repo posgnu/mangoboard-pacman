@@ -1,7 +1,7 @@
 # Pacman game for [mangoboard](https://www.icbanq.com/icdownload/data/ICBShop/Board/Mango%20CM-V310%20Premium%20Package%203%20Exynos%204210%20S5PV310%20EVB%20.pdf)
 > 김근우, 김선표, 김승환
 
-This project is a part of Microprocessor Application and Assembly Programming (CSED211)
+This project is a part of Microprocessor Application and Assembly Programming (CSED211) at POSTECH
 
 ## Start
 
